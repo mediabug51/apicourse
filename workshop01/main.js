@@ -76,17 +76,21 @@ app.get('/information', (req, resp) => {
     //Weather for city is in cityName variable
     //API key is in keys.weather
     const params = {
+        'q': cityName,
+        'APPID': keys.weather
     }
 
     getWeather(params)
         .then(result => {
             const countryCode = result.sys.country.toLowerCase();
-
+            console.log('countryCode: ' + countryCode);
             //TODO 2/3: Add query parameters for News API
             //Use the exact query parameter names as keys
             //The 2 character country code is found in countryCode variable
             //API key is in keys.news
             const params = {
+                'apiKey': keys.news,
+                'country': countryCode 
             }
             return (Promise.all([ result, getNews(params) ]));
         })
