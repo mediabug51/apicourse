@@ -13,8 +13,8 @@ console.info(`Using ${keys.mongo}`);
 
 const db = CitiesDB({  
 	connectionUrl: keys.mongo, 
-	databaseName: 'zips', 
-	collectionName: 'city'
+	databaseName: 'cities', 
+	collectionName: 'cities'
 });
 
 const app = express();
@@ -26,21 +26,66 @@ app.use(express.urlencoded({ extended: true }));
 
 // Mandatory workshop
 // TODO GET /api/states
-
+app.get('/api/states', function(req, res) {
+	res.contentType('application/json')
+	db.findAllStates()
+		.then(function(result) {
+			res.status(200)
+			res.json(result);
+		})
+		.catch(err => {
+			res.status(400)
+			res.json({error: err});
+		})
+})
 
 
 
 // TODO GET /api/state/:state
-
+app.get('/api/state/:state', function(req, res) {
+	res.contentType('application/json')
+	var state = req.params.state
+	db.findCitiesByState(state, {offset: 0, limit: 10})
+		.then(function(result) {
+			newResult = result.map(element => {
+				return '/api/city/' + element;
+			});
+			res.json(newResult)
+		})
+		.catch(err => {
+			res.status(400)
+			res.json({error: err});
+		})
+})
 
 
 
 // TODO GET /api/city/:cityId
+app.get('/api/city/:cityId', function(req, res) {
+	res.contentType('application/json')
+	var cityId = req.params.cityId
 
+	db.findCityById(cityId).then(function(result) {
+		res.json(result)
+	}).catch(err => {
+		res.status(400)
+		res.json({error: err});
+	})
+})
 
 
 // TODO POST /api/city
+app.post('/api/city', function(req, res) {
+	res.contentType('application/json')
+	var data={};
+	data.city = req.body.city
+	data.loc = req.body.loc
+	data.pop = req.body.pop
+	data.state = req.body.state
 
+	res.send('You send: '+ JSON.stringify(data));
+	
+});
 
 
 
