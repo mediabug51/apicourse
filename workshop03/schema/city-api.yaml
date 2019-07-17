@@ -1,0 +1,53 @@
+openapi: "3.0.2"
+
+info:
+  title: "Cities API"
+  description: "My API for US Postal"
+  version: "v1.1"
+
+servers:
+- url: http://localhost:3000
+  description: My dev server
+- url: http://production:3000
+  description: My production server
+
+components:
+  schemas:
+    error:
+      type: object
+      properties:
+          error:
+              type: string
+          required:
+            - error
+
+paths:
+  /api/state/{stateId}:
+    get:
+        description: Return a list of cities from the state
+        operationId: getCitisFromState
+        parameters: stateId
+          in: path
+          required: true
+          schema:
+            $ref:"cityschema.json#/definitions/state"
+
+
+  /api/states:
+    get:
+      description: Return a list of valid 2 character states
+      operationId: getStates
+      responses: 
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "cityschema.json#/definitions/state"
+
+        400:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"

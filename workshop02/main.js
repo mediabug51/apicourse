@@ -77,6 +77,7 @@ app.get('/api/city/:cityId', function(req, res) {
 // TODO POST /api/city
 app.post('/api/city', function(req, res) {
 	res.contentType('application/json')
+	res.contentType('application/json')
 	var data={};
 	data.city = req.body.city
 	data.loc = req.body.loc
